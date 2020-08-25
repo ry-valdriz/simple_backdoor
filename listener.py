@@ -20,8 +20,13 @@ class Listener:
         self.connection.send(json_data)
 
     def receive_json(self):
-        json_data = self.connection.recv(1024)
-        json.loads(json_data)
+        json_data = ""
+        while True:
+            try:
+                json_data = json_data + self.connection.recv(2048)
+                return json.loads(json_data)
+            except ValueError:
+                continue
 
     def execute_remotely(self, command):
         # self.connection.send(command)
