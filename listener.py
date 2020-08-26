@@ -32,11 +32,15 @@ class Listener:
         # self.connection.send(command)
         # return self.connection.recv(2048).decode()
         self.send_json(command)
+        if(command[0].lower() == "exit"):
+            self.connection.close()
+            exit()
         return self.receive_json()
 
     def run(self):
         while True:
             command = raw_input(">> ")
+            command = command.split(" ")
             result = self.execute_remotely(command)
             print(result)
 
