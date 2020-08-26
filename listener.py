@@ -23,11 +23,11 @@ class Listener:
         json_data = ""
         while True:
             try:
-                json_data = json_data + self.connection.recv(2048)
+                json_data = json_data + self.connection.recv(1024).decode()
                 return json.loads(json_data)
             except ValueError:
                 continue
-                
+
     def execute_remotely(self, command):
         # self.connection.send(command)
         # return self.connection.recv(2048).decode()

