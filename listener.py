@@ -24,7 +24,7 @@ class Listener:
         json_data = b""
         while True:
             try:
-                json_data = json_data + self.connection.recv(1024).decode()
+                json_data = json_data + self.connection.recv(1024)
                 return json.loads(json_data)
             except ValueError:
                 continue
@@ -55,7 +55,7 @@ class Listener:
 
         #upload file
         elif(command[0].lower() == "upload"):
-            command.append(self.read_file(command[1]))
+            command.append( (self.read_file(command[1]) ).decode() )
             # upload = [command[0] ,fileName, upload_file]
             if("Error" in command):
                 return "\n"
