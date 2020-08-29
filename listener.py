@@ -51,7 +51,7 @@ class Listener:
         #upload file
         elif(command[0].lower() == "upload"):
             fileName, upload_file = self.read_file(command[1])
-            upload = [fileName, upload_file]
+            upload = [command[0] ,fileName, upload_file]
             self.send_json(upload)
 
         else:
