@@ -71,6 +71,12 @@ class Listener:
         while True:
             command = input(">> ")
             command = command.split(" ")
+
+            #clear screen command
+            if(command[0] == "cls"):
+                print("\n" * 30)
+                continue
+
             result = self.execute_remotely(command)
 
             #download file
