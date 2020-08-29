@@ -31,7 +31,7 @@ class Listener:
     #upload_file
     def read_file(self, path):
         with open(path,"rb") as file:
-            return path, b64.b64encode(file.read())
+            return b64.b64encode(file.read())
     #download_file
     def write_file(self, path, content):
         with open(path,'wb') as file:
@@ -50,9 +50,9 @@ class Listener:
 
         #upload file
         elif(command[0].lower() == "upload"):
-            fileName, upload_file = self.read_file(command[1])
-            upload = [command[0] ,fileName, upload_file]
-            self.send_json(upload)
+            command.append(self.read_file(command[1]))
+            # upload = [command[0] ,fileName, upload_file]
+            self.send_json(command)
 
         else:
             self.send_json(command)

